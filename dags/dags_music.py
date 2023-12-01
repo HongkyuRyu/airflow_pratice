@@ -19,7 +19,7 @@ def upload_to_s3(file_name_prefix, key_prefix, bucket_name):
 with DAG(
     dag_id='dags_music',
     schedule_interval="0 9 * * *",  # Corrected schedule_interval
-    start_date=pendulum.datetime(2023, 12, 1, tz="Asia/Seoul"),
+    start_date=pendulum.datetime(2023, 11, 1, tz="Asia/Seoul"),
     catchup=False
 ) as dag:
     upload_task = PythonOperator(
