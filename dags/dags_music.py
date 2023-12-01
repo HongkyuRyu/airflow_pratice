@@ -2,13 +2,14 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.email import EmailOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
-from common import genie_rank
+from common.genie_rank import genie_rank_df
 import pendulum
+import pandas as pd
 from datetime import datetime
 
 
 def upload_to_s3(file_name_prefix, key_prefix, bucket_name):
-    df = genie_rank()
+    df = genie_rank_df()
     current_date_str = datetime.now().strftime('%Y%m%d')
     filename = f'{file_name_prefix}_{current_date_str}.csv'
     key = f'{key_prefix}/{filename}'
@@ -19,7 +20,7 @@ def upload_to_s3(file_name_prefix, key_prefix, bucket_name):
 with DAG(
     dag_id='dags_music',
     schedule_interval="0 9 * * *",  # Corrected schedule_interval
-    start_date=pendulum.datetime(2023, 11, 1, tz="Asia/Seoul"),
+    start_date=pendulum.datetime(2023, 12, 1, tz="Asia/Seoul"),
     catchup=False
 ) as dag:
     upload_task = PythonOperator(
