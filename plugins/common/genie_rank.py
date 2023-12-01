@@ -11,7 +11,7 @@ def genie_rank_df():
     soup = BeautifulSoup(response.text, 'html.parser')
 
     columns = ['rank', 'title', 'artist', 'album', 'diff_rank']
-    df = pd.DataFrame(columns=columns)
+    data = []
 
     for song_entry in soup.select('tr.list'):
         rank_text = song_entry.select_one('.number').text.strip()
@@ -26,13 +26,15 @@ def genie_rank_df():
         artist = song_entry.select_one('a.artist').text.strip()
         album = song_entry.select_one('a.albumtitle').text.strip()
 
-    df = df.append({
-        'rank': rank,
-        'title': title,
-        'artist': artist,
-        'album': album,
-        'diff_rank': diff_rank
-    }, ignore_index=True)
+        data.append({
+            'rank': rank,
+            'title': title,
+            'artist': artist,
+            'album': album,
+            'diff_rank': diff_rank
+        })
+
+    df = pd.DataFrame(data, columns=columns)
 
     # 어제 순위 계산
     yesterday_date = datetime.now() - timedelta(days=1)
